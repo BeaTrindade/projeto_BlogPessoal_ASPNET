@@ -1,5 +1,6 @@
 ﻿using BlogAPI.Src.Modelos;
 using BlogAPI.Src.Repositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,17 +17,20 @@ namespace BlogAPI.Src.Controladores
     {
         #region Atributos
         private readonly IUsuario _repositorio;
+        private readonly IAutenticacao _servicos;
         #endregion
 
         #region Construtores
-        public UsuarioController(IUsuario repositorio)
+        public UsuarioController(IUsuario repositorio, IAutenticacao servicos)
         {
             _repositorio = repositorio;
+            _servicos = servicos;
         }
         #endregion
 
         #region Metodos
         [HttpGet("email/{emailUsuario}")]
+        [Authorize(Roles = "NORMAL, ADMINISTRADOR")]
         public async Task<ActionResult> PegarUsuarioPeloEmailAsync([FromRoute] string emailUsuario)
         {
             var usuario = await _repositorio.PegarUsuarioPeloEmailAsync(emailUsuario);
@@ -36,12 +40,35 @@ namespace BlogAPI.Src.Controladores
             return Ok(usuario);
         }
 
-        [HttpPost]
+        [HttpPost("cadastrar")]
+        [AllowAnonymous]
         public async Task<ActionResult> NovoUsuarioAsync([FromBody] Usuario usuario)
         {
-            await _repositorio.NovoUsuarioAsync(usuario);
+            try
+            {
+                await _servicos.CriarUsuarioSemDuplicarAsync(usuario);
+                return Created($"api/Usuarios/email/{usuario.Email}", usuario);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+        }
 
-            return Created($"api/Usuarios/{usuario.Email}", usuario);
+        [HttpPost("logar")]
+        [AllowAnonymous]
+        public async Task<ActionResult> LogarAsync([FromBody] Usuario usuario)
+        {
+            var auxiliar = await _repositorio.PegarUsuarioPeloEmailAsync(usuario.Email);
+
+            if (auxiliar == null) return Unauthorized(new { Mensagem = "E-mail inválio" });
+
+            if (auxiliar.Senha != _servicos.CodificarSenha(usuario.Senha))
+                return Unauthorized(new { Mensagem = "Senha inválida" });
+
+            var token = "Bearer " + _servicos.GerarToken(auxiliar);
+
+            return Ok(new { Usuario = auxiliar, Token = token });
         }
         #endregion
     }

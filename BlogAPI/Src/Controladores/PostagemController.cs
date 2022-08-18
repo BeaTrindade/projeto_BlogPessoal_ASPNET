@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogAPI.Src.Controladores
 {
@@ -28,6 +29,7 @@ namespace BlogAPI.Src.Controladores
         #region Métodos
         // Pegar Postagem
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult> PegarTodasPostagemAsync()
         {
             var lista = await _repositorio.PegarTodasPostagemAsync();
@@ -39,6 +41,7 @@ namespace BlogAPI.Src.Controladores
 
         // Pegar Postagem pelo Id
         [HttpGet("id/{idPostagem}")]
+        [Authorize]
         public async Task<ActionResult> PegarPostagemPeloIdAsync([FromRoute] int idPostagem)
         {
             try
@@ -53,6 +56,7 @@ namespace BlogAPI.Src.Controladores
 
         // Criar Postagem
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> NovaPostagemAsync([FromRoute] Postagem postagem)
         {
             try
@@ -68,6 +72,7 @@ namespace BlogAPI.Src.Controladores
 
         // Atualizar Postagem
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult> AtualizarPostagemAsync([FromRoute] Postagem postagem)
         {
             try
@@ -83,6 +88,7 @@ namespace BlogAPI.Src.Controladores
 
         // Deletar Postagem
         [HttpDelete("deletar/{idPostagem}")]
+        [Authorize]
         public async Task<ActionResult> DeletarPostagemAsync([FromRoute] int idPostagem)
         {
             try

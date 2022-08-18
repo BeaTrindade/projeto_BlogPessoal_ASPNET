@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using BlogAPI.Src.Utilidades;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace BlogAPI.Src.Modelos
 {
@@ -26,6 +24,10 @@ namespace BlogAPI.Src.Modelos
         public string Email { get; set; }
         public string Senha { get; set; }
         public string Foto { get; set; }
+
+        [Required]
+        public TipoUsuario Tipo { get; set; }
+
         [JsonIgnore, InverseProperty("Criador")]
         public List<Postagem> MinhasPostagens { get; set; }
         #endregion
