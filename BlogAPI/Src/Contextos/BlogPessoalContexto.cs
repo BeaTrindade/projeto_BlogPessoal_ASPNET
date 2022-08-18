@@ -13,16 +13,18 @@ namespace BlogAPI.Src.Contextos
     /// <para>Versão: 1.0</para>
     /// <para>Data: 17/07/2022</para>
     /// </summary>
-public class BlogPessoalContexto : DbContext
+    public class BlogPessoalContexto : DbContext
     {
         #region Atributos
+
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Tema> Temas { get; set; }
         public DbSet<Postagem> Postagens { get; set; }
+
         #endregion
+
         #region Construtores
-        public BlogPessoalContexto(DbContextOptions<BlogPessoalContexto> opt) :
-        base(opt)
+        public BlogPessoalContexto(DbContextOptions<BlogPessoalContexto> opt) : base(opt)
         {
         }
         #endregion

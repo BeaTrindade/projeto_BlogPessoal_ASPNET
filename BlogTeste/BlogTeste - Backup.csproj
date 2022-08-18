@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
@@ -20,12 +20,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Servicos\" />
+		<Folder Include="Contextos\" />
+		<Folder Include="NewFolder\" />
 		<Folder Include="Repositorios\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="BlogTeste - Backup.csproj" />
 	</ItemGroup>
 
 </Project>
